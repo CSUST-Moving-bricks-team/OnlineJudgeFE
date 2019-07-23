@@ -140,7 +140,7 @@
           render: (h, params) => {
             return h('Button', {
               props: {
-                type: 'error',
+                type: 'primary',
                 size: 'small'
               },
               on: {
@@ -172,7 +172,7 @@
         this.ContestProblemRejudge_column = true
       },
       handleContestProblemRejudge (problemID, contestID) {
-        api.ContestProblemRejudge(problemID, contestID).then(() => {
+        api.problemRejudge(problemID, contestID).then(() => {
           this.$success('Rejudge Successed')
         }, () => {
         })

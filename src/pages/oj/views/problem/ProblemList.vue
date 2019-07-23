@@ -77,6 +77,7 @@
   import utils from '@/utils/utils'
   import { ProblemMixin } from '@oj/components/mixins'
   import Pagination from '@oj/components/Pagination'
+  import { USER_TYPE } from '@/utils/constants'
 
   export default {
     name: 'ProblemList',
@@ -170,7 +171,8 @@
           difficulty: '',
           tag: '',
           page: 1
-        }
+        },
+        problemRejudgeColumn: false
       }
     },
     mounted () {
@@ -208,6 +210,7 @@
           if (this.isAuthenticated) {
             this.addStatusColumn(this.problemTableColumns, res.data.data.results)
           }
+          this.adjustProblemRejudgeColumn()
         }, res => {
           this.loadings.table = false
         })
@@ -264,10 +267,59 @@
           this.$success('Good Luck')
           this.$router.push({name: 'problem-details', params: {problemID: res.data.data}})
         })
+      },
+      adjustProblemRejudgeColumn () {
+        if (this.problemRejudgeColumn || !this.problemRejudgeColumnVisible) {
+          return
+        }
+        const RejudgeColumn = {
+          title: 'Admin Option',
+          fixed: 'right',
+          align: 'center',
+          width: 120,
+          render: (h, params) => {
+            return h('Button', {
+              props: {
+                type: 'primary',
+                size: 'small'
+              },
+              on: {
+                click: (event) => {
+                  this.$Modal.confirm({
+                    width: 350,
+                    loading: false,
+                    title: 'Rejudge Comfirm',
+                    cancelText: 'Cancel',
+                    okText: 'Rejudge',
+                    content: 'Really want to Rejudge Problem?',
+                    onOk: () => {
+                      this.loading = true
+                      this.handleProblemRejudge(params.row._id)
+                      this.loading = false
+                    }
+                  })
+                  event.stopPropagation()
+                }
+              }
+            }, 'Rejudge')
+          }
+        }
+        this.problemTableColumns.push(RejudgeColumn)
+        this.problemRejudgeColumn = true
+      },
+      handleProblemRejudge (problemID) {
+        api.problemRejudge(problemID, '').then(() => {
+          this.$success('Rejudge Successed')
+        }, () => {
+
+        })
       }
     },
     computed: {
-      ...mapGetters(['isAuthenticated'])
+      ...mapGetters(['isAuthenticated', 'user']),
+      problemRejudgeColumnVisible () {
+        return this.user.admin_type === USER_TYPE.SUPER_ADMIN
+      }
     },
     watch: {
       '$route' (newVal, oldVal) {

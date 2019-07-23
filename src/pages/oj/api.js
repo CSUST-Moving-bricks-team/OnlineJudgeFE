@@ -233,13 +233,6 @@ export default {
       }
     })
   },
-  problemRejudge (id) {
-    return ajax('admin/problem/rejudge', 'get', {
-      params: {
-        id
-      }
-    })
-  },
   updateSubmission (data) {
     return ajax('submission', 'put', {
       data
@@ -270,7 +263,7 @@ export default {
       data
     })
   },
-  ContestProblemRejudge (Problemid, Contestid) {
+  problemRejudge (Problemid, Contestid) {
     return ajax('admin/problem/rejudge', 'get', {
       params: {
         contest_id: Contestid,
