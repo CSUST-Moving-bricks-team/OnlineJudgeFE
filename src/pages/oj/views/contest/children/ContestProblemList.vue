@@ -5,10 +5,12 @@
       <Table v-if="contestRuleType == 'ACM' || OIContestRealTimePermission"
              :columns="ACMTableColumns"
              :data="problems"
+             @on-row-click="goContestProblem"
              no-data-text="No Problems"></Table>
       <Table v-else
              :data="problems"
              :columns="OITableColumns"
+             @on-row-click="goContestProblem"
              no-data-text="No Problems"></Table>
     </Panel>
   </div>
@@ -74,7 +76,7 @@
               this.addStatusColumn(this.ACMTableColumns, res.data.data)
             }
           }
-          this.adjustContestProblemEnterColumn()
+          // this.adjustContestProblemEnterColumn()
           this.adjustContestProblemRejudgeColumn()
         })
       },
@@ -142,7 +144,7 @@
                 size: 'small'
               },
               on: {
-                click: () => {
+                click: (event) => {
                   this.$Modal.confirm({
                     width: 350,
                     loading: false,
@@ -156,6 +158,7 @@
                       this.loading = false
                     }
                   })
+                  event.stopPropagation()
                 }
               }
             }, 'Rejudge')

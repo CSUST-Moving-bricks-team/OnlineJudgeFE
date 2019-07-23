@@ -4,7 +4,7 @@
     <div slot="extra">
       <ul class="filter">
         <li>
-          <Button v-if="showgetSimilarListButton" type="warning" @click="getSimilarList">Run Similar</Button>
+          <Button v-if="showgetSimilarListButton" type="primary" @click="getSimilarList">Run Similar</Button>
         </li>
       </ul>
     </div>
@@ -205,9 +205,16 @@
     methods: {
       getSimilarList () {
         let params = this.$route.params.contestID
+        this.loadingTable = true
         api.ContestRunCheckSimilar(params).then(
-          this.$success('Success'),
-          () => {}
+          () => {
+            this.showSimilarList()
+            this.$success('Success')
+            this.loadingTable = false
+          },
+          () => {
+            this.loadingTable = false
+          }
         )
       },
       showSimilarList () {
@@ -263,9 +270,7 @@
         let data = res.data.data
         let ranges = []
         for (let v of data.similarity_check_result) {
-          if (v['user_a'][0] !== '*' && v['user_b'][0] !== '*' && v['user_a'] !== 'root' && v['user_b'] !== 'root') {
-            ranges.push(v)
-          }
+          ranges.push(v)
         }
         this.sortByKey(ranges, 'similarity', 1)
         this.SimilarInfo = ranges
