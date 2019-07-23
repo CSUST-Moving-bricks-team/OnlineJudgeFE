@@ -291,6 +291,14 @@ export default {
         contest_id: Contestid
       }
     })
+  },
+  getRecentContestAnnouncements (contestId, time) {
+    return ajax('contest/get_recent_announcements', 'get', {
+      params: {
+        contest_id: contestId,
+        time: time
+      }
+    })
   }
 }
 

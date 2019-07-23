@@ -134,11 +134,38 @@
       this.$store.dispatch('getContest').then(res => {
         this.changeDomTitle({title: res.data.data.title})
         let data = res.data.data
+        let startTime = moment(data.start_time)
         let endTime = moment(data.end_time)
-        if (endTime.isAfter(moment(data.now))) {
+        let now = moment(data.now)
+        if (endTime.isAfter(now)) {
           this.timer = setInterval(() => {
             this.$store.commit(types.NOW_ADD_1S)
           }, 1000)
+          if (now.isAfter(startTime)) {
+            let fetchRate = 60
+            let announcementSet = new Set()
+            this.announcementsWatcher = setInterval(() => {
+              api.getRecentContestAnnouncements(this.contestID, fetchRate).then(res => {
+                let data = res.data.data
+                data.forEach(announcement => {
+                  if (announcementSet.has(announcement.id)) return
+                  announcementSet.add(announcement.id)
+                  this.$Notice.info({
+                    title: announcement.title,
+                    desc: announcement.content,
+                    render: h => {
+                      return h('div', {
+                        domProps: {
+                          innerHTML: announcement.content
+                        }
+                      })
+                    },
+                    duration: 0
+                  })
+                })
+              })
+            }, fetchRate * 1000)
+          }
         }
       })
     },
@@ -191,6 +218,7 @@
     },
     beforeDestroy () {
       clearInterval(this.timer)
+      clearInterval(this.announcementsWatcher)
       this.$store.commit(types.CLEAR_CONTEST)
     }
   }
