@@ -19,8 +19,6 @@
 <script>
   import {mapState, mapGetters} from 'vuex'
   import {ProblemMixin} from '@oj/components/mixins'
-  import api from '@oj/api'
-  import { USER_TYPE } from '@/utils/constants'
   export default {
     name: 'ContestProblemList',
     mixins: [ProblemMixin],
@@ -58,9 +56,9 @@
             title: 'Title',
             key: 'title'
           }
-        ],
-        ContestProblemEnter_column: false,
-        ContestProblemRejudge_column: false
+        ]
+        // ContestProblemEnter_column: false,
+        // ContestProblemRejudge_column: false
       }
     },
     mounted () {
@@ -77,7 +75,7 @@
             }
           }
           // this.adjustContestProblemEnterColumn()
-          this.adjustContestProblemRejudgeColumn()
+          // this.adjustContestProblemRejudgeColumn()
         })
       },
       goContestProblem (row) {
@@ -88,107 +86,107 @@
             problemID: row._id
           }
         })
-      },
+      }
       /*
       * Contest Problem Entrance @2018.11.19
       */
-      adjustContestProblemEnterColumn () {
-        if (this.ContestProblemEnter_column) {
-          return
-        }
-        const EnterColumn = {
-          title: 'Option',
-          fixed: 'right',
-          align: 'center',
-          width: 120,
-          render: (h, params) => {
-            return h('Button', {
-              props: {
-                type: 'primary',
-                size: 'small'
-              },
-              on: {
-                click: () => {
-                  this.loading = true
-                  this.goContestProblem(params.row)
-                  this.loading = false
-                }
-              }
-            }, 'Enter')
-          }
-        }
-        if (this.contestRuleType === 'ACM') {
-          this.ACMTableColumns.push(EnterColumn)
-        } else if (this.contestRuleType === 'OI') {
-          this.OITableColumns.push(EnterColumn)
-        }
-        this.ContestProblemEnter_column = true
-      },
+      // adjustContestProblemEnterColumn () {
+      //   if (this.ContestProblemEnter_column) {
+      //     return
+      //   }
+      //   const EnterColumn = {
+      //     title: 'Option',
+      //     fixed: 'right',
+      //     align: 'center',
+      //     width: 120,
+      //     render: (h, params) => {
+      //       return h('Button', {
+      //         props: {
+      //           type: 'primary',
+      //           size: 'small'
+      //         },
+      //         on: {
+      //           click: () => {
+      //             this.loading = true
+      //             this.goContestProblem(params.row)
+      //             this.loading = false
+      //           }
+      //         }
+      //       }, 'Enter')
+      //     }
+      //   }
+      //   if (this.contestRuleType === 'ACM') {
+      //     this.ACMTableColumns.push(EnterColumn)
+      //   } else if (this.contestRuleType === 'OI') {
+      //     this.OITableColumns.push(EnterColumn)
+      //   }
+      //   this.ContestProblemEnter_column = true
+      // },
       /*
       * Contest Problem Rejudge @2018.11.18
       * Simditor : v2.3.6
       * */
-      adjustContestProblemRejudgeColumn () {
-        if (this.ContestProblemRejudge_column || !this.ContestProblemRejudgeColumnVisible) {
-          return
-        }
-        const RejudgeColumn = {
-          title: 'Admin Option',
-          fixed: 'right',
-          align: 'center',
-          width: 120,
-          render: (h, params) => {
-            return h('Button', {
-              props: {
-                type: 'primary',
-                size: 'small'
-              },
-              on: {
-                click: (event) => {
-                  this.$Modal.confirm({
-                    width: 350,
-                    loading: false,
-                    title: 'Rejudge Comfirm',
-                    cancelText: 'Cancel',
-                    okText: 'Rejudge',
-                    content: 'Really want to Rejudge Problem?',
-                    onOk: () => {
-                      this.loading = true
-                      this.handleContestProblemRejudge(params.row._id, this.$route.params.contestID)
-                      this.loading = false
-                    }
-                  })
-                  event.stopPropagation()
-                }
-              }
-            }, 'Rejudge')
-          }
-        }
-        if (this.contestRuleType === 'ACM') {
-          this.ACMTableColumns.push(RejudgeColumn)
-        } else if (this.contestRuleType === 'OI') {
-          this.OITableColumns.push(RejudgeColumn)
-        }
-        this.ContestProblemRejudge_column = true
-      },
-      handleContestProblemRejudge (problemID, contestID) {
-        api.problemRejudge(problemID, contestID).then(() => {
-          this.$success('Rejudge Successed')
-        }, () => {
-        })
-      }
+      // adjustContestProblemRejudgeColumn () {
+      //   if (this.ContestProblemRejudge_column || !this.ContestProblemRejudgeColumnVisible) {
+      //     return
+      //   }
+      //   const RejudgeColumn = {
+      //     title: 'Admin Option',
+      //     fixed: 'right',
+      //     align: 'center',
+      //     width: 120,
+      //     render: (h, params) => {
+      //       return h('Button', {
+      //         props: {
+      //           type: 'primary',
+      //           size: 'small'
+      //         },
+      //         on: {
+      //           click: (event) => {
+      //             this.$Modal.confirm({
+      //               width: 350,
+      //               loading: false,
+      //               title: 'Rejudge Comfirm',
+      //               cancelText: 'Cancel',
+      //               okText: 'Rejudge',
+      //               content: 'Really want to Rejudge Problem?',
+      //               onOk: () => {
+      //                 this.loading = true
+      //                 this.handleContestProblemRejudge(params.row._id, this.$route.params.contestID)
+      //                 this.loading = false
+      //               }
+      //             })
+      //             event.stopPropagation()
+      //           }
+      //         }
+      //       }, 'Rejudge')
+      //     }
+      //   }
+      //   if (this.contestRuleType === 'ACM') {
+      //     this.ACMTableColumns.push(RejudgeColumn)
+      //   } else if (this.contestRuleType === 'OI') {
+      //     this.OITableColumns.push(RejudgeColumn)
+      //   }
+      //   this.ContestProblemRejudge_column = true
+      // },
+      // handleContestProblemRejudge (problemID, contestID) {
+      //   api.problemRejudge(problemID, contestID).then(() => {
+      //     this.$success('Rejudge Successed')
+      //   }, () => {
+      //   })
+      // }
     },
     computed: {
       ...mapState({
         problems: state => state.contest.contestProblems
       }),
-      ...mapGetters(['isAuthenticated', 'contestRuleType', 'OIContestRealTimePermission', 'user']),
+      ...mapGetters(['isAuthenticated', 'contestRuleType', 'OIContestRealTimePermission', 'user'])
       /**
        * @return {boolean}
        */
-      ContestProblemRejudgeColumnVisible () {
-        return this.$route.params.contestID && this.user.admin_type === USER_TYPE.SUPER_ADMIN
-      }
+      // ContestProblemRejudgeColumnVisible () {
+      //   return this.$route.params.contestID && this.user.admin_type === USER_TYPE.SUPER_ADMIN
+      // }
     }
   }
 </script>

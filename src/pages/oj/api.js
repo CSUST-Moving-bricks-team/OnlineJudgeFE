@@ -263,14 +263,6 @@ export default {
       data
     })
   },
-  problemRejudge (Problemid, Contestid) {
-    return ajax('admin/problem/rejudge', 'get', {
-      params: {
-        contest_id: Contestid,
-        problem_id: Problemid
-      }
-    })
-  },
   ContestRunCheckSimilar (Contestid) {
     return ajax('admin/contest_check_similar', 'get', {
       params: {

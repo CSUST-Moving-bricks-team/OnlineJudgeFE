@@ -68,13 +68,15 @@
         <el-table-column
           fixed="right"
           label="Operation"
-          width="250">
+          width="300">
           <div slot-scope="scope">
             <icon-btn name="Edit" icon="edit" @click.native="goEdit(scope.row.id)"></icon-btn>
             <icon-btn v-if="contestId" name="Make Public" icon="clone"
                       @click.native="makeContestProblemPublic(scope.row.id)"></icon-btn>
             <icon-btn icon="download" name="Download TestCase"
                       @click.native="downloadTestCase(scope.row.id)"></icon-btn>
+            <icon-btn icon="refresh" name="Rejudge Problem"
+                      @click.native="rejudgeProblem(scope.row.id)"></icon-btn>
             <icon-btn icon="trash" name="Delete Problem"
                       @click.native="deleteProblem(scope.row.id)"></icon-btn>
           </div>
@@ -228,6 +230,17 @@
           this.getProblemList(this.currentPage)
         }).catch(() => {
           this.InlineEditDialogVisible = false
+        })
+      },
+      rejudgeProblem (id) {
+        this.$confirm('Sure to rejudge this problem?', 'Rejudge Problem', {
+          type: 'warning'
+        }).then(() => {
+          api.problemRejudge(id, this.contestId).then(() => {
+            this.$success('Rejudge Successed')
+          }, () => {
+          })
+        }, () => {
         })
       },
       handleInlineEdit (row) {
