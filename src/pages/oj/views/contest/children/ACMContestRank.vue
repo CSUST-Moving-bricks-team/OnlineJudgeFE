@@ -68,7 +68,7 @@
           {
             title: 'Rank',
             align: 'center',
-            width: 60,
+            width: 70,
             render: (h, params) => {
               return h('span', {}, params.row.rank)
             }
@@ -97,7 +97,7 @@
           {
             title: 'AC / Total',
             align: 'center',
-            width: 100,
+            width: 80,
             render: (h, params) => {
               return h('span', {}, [
                 h('span', {}, params.row.accepted_number + ' / '),
@@ -117,6 +117,7 @@
           {
             title: 'TotalTime',
             align: 'center',
+            max_width: 100,
             render: (h, params) => {
               return h('span', this.parseTotalTime(params.row.total_time))
             }
@@ -297,7 +298,9 @@
                 if (status.error_number !== 0) {
                   errorNumber = h('p', '(-' + status.error_number + ')')
                 }
-                return h('div', [acTime, errorNumber])
+                return h('div', {
+                  width: 100
+                }, [acTime, errorNumber])
               }
             }
           })
@@ -305,7 +308,7 @@
       },
       parseTotalTime (totalTime) {
         let m = moment.duration(totalTime, 's')
-        return [Math.floor(m.asDays() * 24) + Math.floor(m.asHours()), m.minutes(), m.seconds()].join(':')
+        return [Math.floor(m.asHours()), m.minutes(), m.seconds()].join(':')
       },
       downloadRankCSV () {
         utils.downloadFile(`contest_rank?download_csv=1&contest_id=${this.$route.params.contestID}&force_refrash=${this.forceUpdate ? '1' : '0'}`)
